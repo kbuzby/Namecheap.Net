@@ -19,10 +19,10 @@ namespace Namecheap.Net
 
         public NamecheapApi(string apiKey, string userName, IPAddress clientIpAddress, string? apiUserName = null, bool useSandbox = false)
         {
-            ApiKey = apiKey;
-            UserName = userName;
+            ApiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
+            UserName = userName ?? throw new ArgumentNullException(nameof(userName));
             ApiUserName = apiUserName ?? userName;
-            ClientIpAddress = clientIpAddress;
+            ClientIpAddress = clientIpAddress ?? throw new ArgumentNullException(nameof(clientIpAddress));
             _useSandbox = useSandbox;
         }
 
