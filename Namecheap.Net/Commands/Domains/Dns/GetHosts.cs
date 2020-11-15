@@ -41,35 +41,43 @@ namespace Namecheap.Net
             public override string Type => CommandName;
 
             [XmlElement]
-            public DomainDNSGetHostsResult? DomainDNSGetHostsResult { get; private set; }
+            public DomainDNSGetHostsResult? DomainDNSGetHostsResult { get; set; }
         }
 
         public class DomainDNSGetHostsResult
         {
             [XmlAttribute]
-            public string? Domain { get; private set; }
+            public string? Domain { get; set; }
 
             [XmlAttribute]
-            public bool? IsUsingOurDNS { get; private set; }
+            public string? IsUsingOurDNS { get; set; }
 
-            [XmlElement]
-            public Host[]? Hosts { get; private set; }
+            [XmlElement(ElementName = "host")]
+            public Host[]? Host { get; set; }
         }
 
         public class Host
         {
             [XmlAttribute]
-            public string? HostId { get; private set; }
+            public string? HostId { get; set; }
             [XmlAttribute]
-            public string? Name { get; private set; }
+            public string? Name { get; set; }
             [XmlAttribute]
-            public string? Type { get; private set; }
+            public string? Type { get; set; }
             [XmlAttribute]
-            public string? Address { get; private set; }
+            public string? Address { get; set; }
             [XmlAttribute]
-            public string? MXPref { get; private set; }
+            public string? MXPref { get; set; }
             [XmlAttribute]
-            public string? TTL { get; private set; }
+            public string? TTL { get; set; }
+            [XmlAttribute]
+            public string? AssociatedAppTitle { get; set; }
+            [XmlAttribute]
+            public string? FriendlyName { get; set; }
+            [XmlAttribute]
+            public string? IsActive { get; set; }
+            [XmlAttribute]
+            public string? IsDDNSEnabled { get; set; }
         }
     }
 

@@ -24,30 +24,39 @@ namespace Namecheap.Net
 
             using Stream responseStream = await Api.HttpClient.GetStreamAsync(requestUri);
 
+            /*
+            using StreamReader sr = new(responseStream);
+
+            string responseString = sr.ReadToEnd();
+            */
+
             return xmlSerializer.Deserialize(responseStream) as ApiResponse<TResponse>;
         }
     }
 
     [XmlRoot(ElementName = "ApiResponse",Namespace = "http://api.namecheap.com/xml.response")]
-    public abstract class ApiResponse<TContent> where TContent : CommandResponse
+    public class ApiResponse<TContent> where TContent : CommandResponse
     {
         [XmlAttribute]
-        public string? Status { get; private set; }
+        public string? Status { get; set; }
 
         [XmlElement]
-        public abstract string RequestedCommand { get; protected set; }
+        public string[]? Errors { get; set; }
 
         [XmlElement]
-        public abstract TContent CommandResponse { get; protected set; }
+        public string? RequestedCommand { get; set; }
 
         [XmlElement]
-        public string? Server { get; private set; }
+        public TContent? CommandResponse { get; set; }
 
         [XmlElement]
-        public string? GMTTimeDifference { get; private set; }
+        public string? Server { get; set; }
 
         [XmlElement]
-        public string? ExecutionTime { get; private set; }
+        public string? GMTTimeDifference { get; set; }
+
+        [XmlElement]
+        public string? ExecutionTime { get; set; }
     }
 
     public abstract class CommandResponse
