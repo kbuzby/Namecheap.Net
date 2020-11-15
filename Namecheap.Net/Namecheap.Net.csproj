@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-	<PackageReference Include ="NuGet.Build.Tasks.Pack" Version="5.2.0"/>
+	<PackageReference Include="NuGet.Build.Tasks.Pack" Version="5.2.0" />
   </ItemGroup>
 
 </Project>
