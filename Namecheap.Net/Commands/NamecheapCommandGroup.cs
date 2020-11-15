@@ -56,7 +56,7 @@ namespace Namecheap.Net
         public string? GMTTimeDifference { get; set; }
 
         [XmlElement]
-        public string? ExecutionTime { get; set; }
+        public double ExecutionTime { get; set; }
     }
 
     public abstract class CommandResponse
