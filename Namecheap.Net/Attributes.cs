@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Namecheap.Net
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Interface)]
     internal class NamecheapApiCommandAttribute: Attribute
     {
         public string Command { get; }

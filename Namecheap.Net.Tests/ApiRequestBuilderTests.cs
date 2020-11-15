@@ -107,13 +107,18 @@ namespace Namecheap.Net.Tests
             });
         }
 
-        #region Helper 
+        #region Helpers 
         [NamecheapApiCommand("Test.Command")]
-        private class TestCommandBasic
+        private interface ITestCommandBasic
         {
             [QueryParam(Optional = true)]
-            public string Prop { get; init; } 
+            public string Prop { get; } 
             [QueryParam(Optional = true)]
+            public string Prop1 { get; }
+        }
+        private class TestCommandBasic : ITestCommandBasic
+        {
+            public string Prop { get; init; }
             public string Prop1 { get; init; }
         }
 
