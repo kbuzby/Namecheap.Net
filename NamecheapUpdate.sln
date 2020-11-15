@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Namecheap.Net", "Namecheap.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Namecheap.Net.Tests", "Namecheap.Net.Tests\Namecheap.Net.Tests.csproj", "{0647146D-ADB6-40A3-A580-4105CE4A58C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Namecheap.Net.Tests.Integration", "Namecheap.Net.Tests.Integration\Namecheap.Net.Tests.Integration.csproj", "{B2A2EC48-516E-431F-AF07-DE8CC4687EEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{0647146D-ADB6-40A3-A580-4105CE4A58C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0647146D-ADB6-40A3-A580-4105CE4A58C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0647146D-ADB6-40A3-A580-4105CE4A58C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A2EC48-516E-431F-AF07-DE8CC4687EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A2EC48-516E-431F-AF07-DE8CC4687EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A2EC48-516E-431F-AF07-DE8CC4687EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A2EC48-516E-431F-AF07-DE8CC4687EEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
