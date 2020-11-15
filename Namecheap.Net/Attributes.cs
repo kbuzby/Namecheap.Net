@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+[assembly: InternalsVisibleTo("Namecheap.Net.Tests.Integration")]
+
 namespace Namecheap.Net
 {
     [AttributeUsage(AttributeTargets.Class)]
