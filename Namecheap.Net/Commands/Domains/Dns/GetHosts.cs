@@ -50,7 +50,7 @@ namespace Namecheap.Net
             public string? Domain { get; set; }
 
             [XmlAttribute]
-            public string? IsUsingOurDNS { get; set; }
+            public bool IsUsingOurDNS { get; set; }
 
             [XmlElement(ElementName = "host")]
             public Host[]? Host { get; set; }
@@ -69,15 +69,15 @@ namespace Namecheap.Net
             [XmlAttribute]
             public string? MXPref { get; set; }
             [XmlAttribute]
-            public string? TTL { get; set; }
+            public int TTL { get; set; }
             [XmlAttribute]
             public string? AssociatedAppTitle { get; set; }
             [XmlAttribute]
             public string? FriendlyName { get; set; }
             [XmlAttribute]
-            public string? IsActive { get; set; }
+            public bool IsActive { get; set; }
             [XmlAttribute]
-            public string? IsDDNSEnabled { get; set; }
+            public bool IsDDNSEnabled { get; set; }
         }
     }
 
