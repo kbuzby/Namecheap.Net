@@ -17,6 +17,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -24,8 +25,111 @@
                 <Label>API Key</Label>
                 <TextBox Text="{Binding ApiKey, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
             </DockPanel>
-            <Button Grid.Row="1" Width="100" Height="25" Click="Button_Click">Load</Button>
+            <DockPanel Grid.Row="1" Height="25" HorizontalAlignment="Stretch" Margin="5,5,5,5">
+                <Label>UserName</Label>
+                <TextBox Text="{Binding UserName, Mode=TwoWay}"/>
+            </DockPanel>
+            <TreeView x:Name="tvCommands" Grid.Row="2" HorizontalAlignment="Stretch" SelectedItemChanged="TreeView_SelectedItemChanged">
+                <TreeViewItem Header="Domains" IsSelected="True">
+                    <TreeViewItem Header="GetList" />
+                    <TreeViewItem Header="GetContacts"/>
+                    <TreeViewItem Header="Create"/>
+                    <TreeViewItem Header="GetTldList"/>
+                    <TreeViewItem Header="SetContacts"/>
+                    <TreeViewItem Header="Check"/>
+                    <TreeViewItem Header="Reactivate"/>
+                    <TreeViewItem Header="Renew"/>
+                    <TreeViewItem Header="GetRegistrarLock"/>
+                    <TreeViewItem Header="SetRegistrarLock"/>
+                    <TreeViewItem Header="GetInfo"/>
+                    <TreeViewItem Header="DNS">
+                        <TreeViewItem Header="SetDefault"/>
+                        <TreeViewItem Header="SetCustom"/>
+                        <TreeViewItem Header="GetList"/>
+                        <TreeViewItem Header="GetHosts"/>
+                        <TreeViewItem Header="GetEmailForwarding"/>
+                        <TreeViewItem Header="SetEmailForwarding"/>
+                        <TreeViewItem Header="SetHosts"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="NS">
+                        <TreeViewItem Header="Create"/>
+                        <TreeViewItem Header="Delete"/>
+                        <TreeViewItem Header="GetInfo"/>
+                        <TreeViewItem Header="Update"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Transfer">
+                        <TreeViewItem Header="Create"/>
+                        <TreeViewItem Header="GetStatus"/>
+                        <TreeViewItem Header="UpdateStatus"/>
+                        <TreeViewItem Header="GetList"/>
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem Header="SSL">
+                    <TreeViewItem Header="Create"/>
+                    <TreeViewItem Header="GetList"/>
+                    <TreeViewItem Header="ParseCSR"/>
+                    <TreeViewItem Header="GetApproverEmailList"/>
+                    <TreeViewItem Header="Activate"/>
+                    <TreeViewItem Header="ResendApproverEmail"/>
+                    <TreeViewItem Header="GetInfo"/>
+                    <TreeViewItem Header="Renew"/>
+                    <TreeViewItem Header="Reissue"/>
+                    <TreeViewItem Header="ResendFulfillmentEmail"/>
+                    <TreeViewItem Header="PurchaseMoreSans"/>
+                    <TreeViewItem Header="RevokeCertificate"/>
+                    <TreeViewItem Header="EditDCVMethod"/>
+                </TreeViewItem>
+                <TreeViewItem Header="Users">
+                    <TreeViewItem Header="GetPricing"/>
+                    <TreeViewItem Header="GetBalances"/>
+                    <TreeViewItem Header="ChangePassword"/>
+                    <TreeViewItem Header="Update"/>
+                    <TreeViewItem Header="CreateAddFundsRequest"/>
+                    <TreeViewItem Header="GetAddFundsStatus"/>
+                    <TreeViewItem Header="Create"/>
+                    <TreeViewItem Header="Login"/>
+                    <TreeViewItem Header="ResetPassword"/>
+                    <TreeViewItem Header="Address">
+                        <TreeViewItem Header="Create"/>
+                        <TreeViewItem Header="Delete"/>
+                        <TreeViewItem Header="GetInfo"/>
+                        <TreeViewItem Header="GetList"/>
+                        <TreeViewItem Header="SetDefault"/>
+                        <TreeViewItem Header="Update"/>
+                    </TreeViewItem>
+                </TreeViewItem>
+                <TreeViewItem Header="WhoIsGuard">
+                    <TreeViewItem Header="ChangeEmailAddress"/>
+                    <TreeViewItem Header="Enable"/>
+                    <TreeViewItem Header="Disable"/>
+                    <TreeViewItem Header="GetList"/>
+                    <TreeViewItem Header="Renew"/>
+                </TreeViewItem>
+            </TreeView>
         </Grid>
-        <TextBlock Grid.Column="1" Text="{Binding ApiResponse}"/>
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            <Label>Request</Label>
+            <ListView x:Name="lvRequest" ItemsSource="{Binding RequestProperties}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel HorizontalAlignment="Stretch">
+                            <Label Content="{Binding PropertyName, Mode=OneWay}"/>
+                            <TextBox Text="{Binding PropertyValue}" HorizontalAlignment="Stretch"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Click="Button_Click">Send</Button>
+
+            <Label>Response</Label>
+            <ScrollViewer>
+                <TextBlock Text="{Binding ApiResponse}"/>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 </Window>
