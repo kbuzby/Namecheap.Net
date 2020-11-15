@@ -66,7 +66,10 @@ namespace Namecheap.Net.Tests
 
             Uri requestUri = ApiRequestBuilder.BuildRequest(api, command);
 
-            AssertCommonQueryParams(QueryHelpers.ParseQuery(requestUri.Query));
+            var queryCollection = QueryHelpers.ParseQuery(requestUri.Query);
+            AssertCommonQueryParams(queryCollection);
+            Assert.False(queryCollection.ContainsKey("Prop"));
+            Assert.False(queryCollection.ContainsKey("Prop1"));
         }
 
         /// Test arguement exception thrown for command without attribtue

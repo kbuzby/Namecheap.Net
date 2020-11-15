@@ -42,10 +42,16 @@ namespace Namecheap.Net
                     .Where(prop => Attribute.IsDefined(prop, typeof(QueryParamAttribute)));
                 foreach (var prop in commandQueryParamProps)
                 {
-                    string? queryKey = (prop?.GetCustomAttributes(typeof(QueryParamAttribute), true).First() as QueryParamAttribute)?.Key;
-                    if (queryKey == null) { continue; }
+                    QueryParamAttribute? queryAttr = (prop?.GetCustomAttributes(typeof(QueryParamAttribute), true).First() as QueryParamAttribute);
+                    if (queryAttr == null) { continue; }
 
-                    queryParams.Add(queryKey, prop?.GetValue(command)?.ToString() ?? "");
+                    string queryKey = queryAttr.Key;
+                    object? queryValue = prop?.GetValue(command);
+
+                    // if object is empty / null and it was listed as optional then don't include it in the queryParams
+                    if ((queryValue == null || (queryValue is string queryValueStr && string.IsNullOrEmpty(queryValueStr))) 
+                        && queryAttr.Optional) { continue; }
+                    queryParams.Add(queryKey, queryValue?.ToString() ?? "");
                 }
                 
                 return queryParams;
