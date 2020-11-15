@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace Namecheap.Net
 {
-    public class DomainCommands: NamecheapCommandGroup
+    public partial class DomainCommands: NamecheapCommandGroup
     {
         private readonly Lazy<DnsCommands> _dns;
         public DnsCommands Dns => _dns.Value;
