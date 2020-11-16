@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using Namecheap.Net.Commands.Domains;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Namecheap.Net
         public string ApiUserName { get; }
         public IPAddress ClientIpAddress { get; }
 
-        private readonly Lazy<DomainCommands> _domains;
-        public DomainCommands Domains => _domains.Value;
+        private readonly Lazy<DomainsCommandGroup> _domains;
+        public DomainsCommandGroup Domains => _domains.Value;
 
         public NamecheapApi(string apiKey, string userName, IPAddress clientIpAddress, string? apiUserName = null, bool useSandbox = false)
         {
@@ -31,7 +32,7 @@ namespace Namecheap.Net
             ClientIpAddress = clientIpAddress ?? throw new ArgumentNullException(nameof(clientIpAddress));
             _useSandbox = useSandbox;
 
-            _domains = new Lazy<DomainCommands>(() => new DomainCommands(this));
+            _domains = new Lazy<DomainsCommandGroup>(() => new DomainsCommandGroup(this));
         }
 
     }

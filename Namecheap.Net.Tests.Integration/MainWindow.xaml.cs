@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Namecheap.Net.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -150,7 +151,8 @@ namespace Namecheap.Net.Tests.Integration
         {
             return itemPath switch
             {
-                "Domains.DNS.GetHosts" => typeof(DnsGetHostsRequest),
+                "Domains.GetList" => typeof(Test.Domains.GetListRequest),
+                "Domains.DNS.GetHosts" => typeof(Test.Domains.Dns.GetHostsRequest),
                 _ => null
             };
         }
@@ -158,7 +160,8 @@ namespace Namecheap.Net.Tests.Integration
         {
             return request switch
             {
-                DnsGetHostsRequest => typeof(ApiResponse<DnsCommands.GetHostsResponse>),
+                Test.Domains.GetListRequest => typeof(ApiResponse<Commands.Domains.GetListResponse>),
+                Test.Domains.Dns.GetHostsRequest => typeof(ApiResponse<Commands.Domains.Dns.GetHostsResponse>),
                 _ => null
             };
         }
@@ -166,7 +169,8 @@ namespace Namecheap.Net.Tests.Integration
         {
             return request switch
             {
-                DnsGetHostsRequest => await api.Domains.Dns.GetHosts((DnsGetHostsRequest)request),
+                Test.Domains.GetListRequest => await api.Domains.GetList((Test.Domains.GetListRequest)request),
+                Test.Domains.Dns.GetHostsRequest => await api.Domains.Dns.GetHosts((Test.Domains.Dns.GetHostsRequest)request),
                 _ => null
             };
         }

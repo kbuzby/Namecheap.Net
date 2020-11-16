@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Namecheap.Net
+namespace Namecheap.Net.Commands
 {
     public abstract class NamecheapCommandGroup
     {

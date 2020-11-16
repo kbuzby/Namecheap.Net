@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Namecheap.Net
+namespace Namecheap.Net.Commands.Domains.Dns
 {
-    public partial class DnsCommands
+    public partial class DnsCommandGroup
     {
-        private const string GetHostsCommandName = "namecheap.domains.dns.getHosts";
+        internal const string GetHostsCommand = "namecheap.domains.dns.getHosts";
 
         public async Task<ApiResponse<GetHostsResponse>?> GetHosts(string sld, string tld)
         {
@@ -21,70 +21,70 @@ namespace Namecheap.Net
             return await ExecuteCommand<IGetHostsRequest,GetHostsResponse>(hostsRequest);
         }
 
-        [NamecheapApiCommand(GetHostsCommandName)]
-        public interface IGetHostsRequest
+    }
+    [NamecheapApiCommand(DnsCommandGroup.GetHostsCommand)]
+    public interface IGetHostsRequest
+    {
+        [QueryParam("SLD")]
+        public string Sld { get; }
+        [QueryParam("TLD")]
+        public string Tld { get; }
+    }
+
+    public record GetHostsRequest : IGetHostsRequest
+    {
+        public string Sld { get; }
+        public string Tld { get; }
+
+        public GetHostsRequest(string sld, string tld)
         {
-            [QueryParam("SLD")]
-            public string Sld { get; }
-            [QueryParam("TLD")]
-            public string Tld { get; }
+            Sld = sld;
+            Tld = tld;
         }
+    }
 
-        public record GetHostsRequest: IGetHostsRequest
-        {
-            public string Sld { get; }
-            public string Tld { get; }
+    public class GetHostsResponse : CommandResponse
+    {
+        public override string Type => DnsCommandGroup.GetHostsCommand;
 
-            public GetHostsRequest(string sld, string tld)
-            {
-                Sld = sld;
-                Tld = tld;
-            }
-        }
+        [XmlElement]
+        public DomainDNSGetHostsResult? DomainDNSGetHostsResult { get; set; }
+    }
 
-        public class GetHostsResponse : CommandResponse
-        {
-            public override string Type => GetHostsCommandName;
+    public class DomainDNSGetHostsResult
+    {
+        [XmlAttribute]
+        public string? Domain { get; set; }
 
-            [XmlElement]
-            public DomainDNSGetHostsResult? DomainDNSGetHostsResult { get; set; }
-        }
+        [XmlAttribute]
+        public bool IsUsingOurDNS { get; set; }
 
-        public class DomainDNSGetHostsResult
-        {
-            [XmlAttribute]
-            public string? Domain { get; set; }
+        [XmlElement(ElementName = "host")]
+        public Host[]? Host { get; set; }
+    }
 
-            [XmlAttribute]
-            public bool IsUsingOurDNS { get; set; }
-
-            [XmlElement(ElementName = "host")]
-            public Host[]? Host { get; set; }
-        }
-
-        public class Host
-        {
-            [XmlAttribute]
-            public string? HostId { get; set; }
-            [XmlAttribute]
-            public string? Name { get; set; }
-            [XmlAttribute]
-            public string? Type { get; set; }
-            [XmlAttribute]
-            public string? Address { get; set; }
-            [XmlAttribute]
-            public string? MXPref { get; set; }
-            [XmlAttribute]
-            public int TTL { get; set; }
-            [XmlAttribute]
-            public string? AssociatedAppTitle { get; set; }
-            [XmlAttribute]
-            public string? FriendlyName { get; set; }
-            [XmlAttribute]
-            public bool IsActive { get; set; }
-            [XmlAttribute]
-            public bool IsDDNSEnabled { get; set; }
-        }
+    public class Host
+    {
+        [XmlAttribute]
+        public string? HostId { get; set; }
+        [XmlAttribute]
+        public string? Name { get; set; }
+        [XmlAttribute]
+        public string? Type { get; set; }
+        [XmlAttribute]
+        public string? Address { get; set; }
+        [XmlAttribute]
+        public string? MXPref { get; set; }
+        [XmlAttribute]
+        public int TTL { get; set; }
+        [XmlAttribute]
+        public string? AssociatedAppTitle { get; set; }
+        [XmlAttribute]
+        public string? FriendlyName { get; set; }
+        [XmlAttribute]
+        public bool IsActive { get; set; }
+        [XmlAttribute]
+        public bool IsDDNSEnabled { get; set; }
     }
 
 }
