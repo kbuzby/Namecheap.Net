@@ -9,24 +9,30 @@ namespace Namecheap.Net
 {
     public partial class DnsCommands
     {
-        private const string CommandName = "namecheap.domains.dns.getHosts";
+        private const string GetHostsCommandName = "namecheap.domains.dns.getHosts";
 
         public async Task<ApiResponse<GetHostsResponse>?> GetHosts(string sld, string tld)
         {
             return await GetHosts(new GetHostsRequest(sld, tld));
         }
 
-        public async Task<ApiResponse<GetHostsResponse>?> GetHosts(GetHostsRequest hostsRequest)
+        public async Task<ApiResponse<GetHostsResponse>?> GetHosts(IGetHostsRequest hostsRequest)
         {
-            return await ExecuteCommand<GetHostsRequest,GetHostsResponse>(hostsRequest);
+            return await ExecuteCommand<IGetHostsRequest,GetHostsResponse>(hostsRequest);
         }
 
-        [NamecheapApiCommand(CommandName)]
-        public record GetHostsRequest
+        [NamecheapApiCommand(GetHostsCommandName)]
+        public interface IGetHostsRequest
         {
             [QueryParam("SLD")]
             public string Sld { get; }
             [QueryParam("TLD")]
+            public string Tld { get; }
+        }
+
+        public record GetHostsRequest: IGetHostsRequest
+        {
+            public string Sld { get; }
             public string Tld { get; }
 
             public GetHostsRequest(string sld, string tld)
@@ -38,7 +44,7 @@ namespace Namecheap.Net
 
         public class GetHostsResponse : CommandResponse
         {
-            public override string Type => CommandName;
+            public override string Type => GetHostsCommandName;
 
             [XmlElement]
             public DomainDNSGetHostsResult? DomainDNSGetHostsResult { get; set; }
