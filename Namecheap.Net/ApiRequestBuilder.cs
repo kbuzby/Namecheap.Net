@@ -27,9 +27,11 @@ namespace Namecheap.Net
         {
             if (command != null)
             {
-                var (iface, commandAttr) = FindApiCommandInterface(command);
-                if (iface != null && commandAttr != null)
+                var commandInfo = FindApiCommandInterface(command.GetType());
+                if (commandInfo != null)
                 {
+                    (Type iface, NamecheapApiCommandAttribute commandAttr) = commandInfo.Value;
+
                     // get the every command params
                     Dictionary<string, string> queryParams = new()
                     {
@@ -59,17 +61,14 @@ namespace Namecheap.Net
 
                     return queryParams;
                 }
-
             }
 
             throw new ArgumentException($"{nameof(command)} must be an object with NamecheapApiCommandAttribute");
         }
 
-        private static (Type?, NamecheapApiCommandAttribute?) FindApiCommandInterface<TCommand>(TCommand command)
+        internal static (Type iface, NamecheapApiCommandAttribute commandAttr)? FindApiCommandInterface(Type requestType)
         {
-            if (command == null) { return (null,null); }
-
-            foreach (var iface in command.GetType().GetInterfaces())
+            foreach (var iface in requestType.GetInterfaces())
             {
                 var attr = iface.GetCustomAttribute<NamecheapApiCommandAttribute>();
                 if (attr != null)
@@ -77,7 +76,7 @@ namespace Namecheap.Net
                     return (iface, attr);
                 }
             }
-            return (null,null);
+            return null;
         }
     }
 }
