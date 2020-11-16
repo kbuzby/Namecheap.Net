@@ -26,6 +26,8 @@ namespace Namecheap.Net.Tests.Integration
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private Type? _requestType;
+
         private string? _apiKey;
         public string? ApiKey
         {
@@ -82,32 +84,60 @@ namespace Namecheap.Net.Tests.Integration
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             if (ApiKey == null) { return; }
+            if (UserName == null) { return; }
+            if (_requestType == null) { return; }
 
-            NamecheapApi api = new(ApiKey, "kbuzby", new System.Net.IPAddress(new byte[] { 97, 83, 134, 98 }));
-            var getHostsResponse = await api.Domains.Dns.GetHosts("buzby", "dev");
-            XmlSerializer xmlSerializer = new(typeof(ApiResponse<DnsCommands.GetHostsResponse>));
+            // Build the request
+            var request = Activator.CreateInstance(_requestType);
+            if (RequestProperties == null) { return; }
+            foreach (var prop in RequestProperties)
+            {
+                prop.PropertyInfo.SetValue(request, prop.PropertyValue);
+            }
 
+            // Setup handling the response
+            var responseType = GetResponseTypeForRequest(request);
+            if (responseType == null) { return; }
+            XmlSerializer xmlSerializer = new(responseType);
+
+            // Execute the request
+            NamecheapApi api = new(ApiKey, UserName, new System.Net.IPAddress(new byte[] { 97, 83, 134, 98 }));
+            var response = await ExecuteCommandForRequest(api, request);
+            if (response == null) { return; }
+
+            // write output
             using MemoryStream memStream = new();
-
-            xmlSerializer.Serialize(memStream, getHostsResponse);
-
+            xmlSerializer.Serialize(memStream, response);
             ApiResponse = Encoding.UTF8.GetString(memStream.ToArray());
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            // Always reset when it's changed
+            RequestProperties = null;
+
             if (e.NewValue is TreeViewItem treeViewItem)
             {
                 var path = GetItemPath(treeViewItem);
-                var requestType = GetRequestTypeForPath(path);
-                if (requestType == null) { return; }
-                var requestProps = requestType.GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(QueryParamAttribute)));
+                _requestType = GetRequestTypeForPath(path);
+                if (_requestType == null) { return; }
+                var commandInfo = ApiRequestBuilder.FindApiCommandInterface(_requestType);
+                if (commandInfo == null) { return; }
+                HashSet<string> interfacePropNames = commandInfo.Value.iface
+                    .GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(QueryParamAttribute), true))
+                    .Select(prop => prop.Name).ToHashSet();
+                // TODO get the property info for the interface props from the request type since we'll need the setter
+                var requestProps = _requestType.GetProperties().Where(prop => interfacePropNames.Contains(prop.Name));
                 var requestProperties = new ObservableCollection<PropertyDisplayInfo>();
                 foreach (var propInfo in requestProps)
                 {
                     requestProperties.Add(new PropertyDisplayInfo(propInfo));
                 }
                 RequestProperties = requestProperties;
+            }
+            else
+            {
+                _requestType = null;
             }
         }
 
@@ -116,11 +146,27 @@ namespace Namecheap.Net.Tests.Integration
             return (treeViewItem.Parent is TreeViewItem parentItem ? GetItemPath(parentItem) + "." : "") + treeViewItem.Header;
         }
 
-        private Type? GetRequestTypeForPath(string itemPath)
+        private static Type? GetRequestTypeForPath(string itemPath)
         {
             return itemPath switch
             {
-                "Domains.DNS.GetHosts" => typeof(DnsCommands.GetHostsRequest),
+                "Domains.DNS.GetHosts" => typeof(DnsGetHostsRequest),
+                _ => null
+            };
+        }
+        private static Type? GetResponseTypeForRequest(object? request)
+        {
+            return request switch
+            {
+                DnsGetHostsRequest => typeof(ApiResponse<DnsCommands.GetHostsResponse>),
+                _ => null
+            };
+        }
+        private static async Task<object?> ExecuteCommandForRequest(NamecheapApi api, object? request)
+        {
+            return request switch
+            {
+                DnsGetHostsRequest => await api.Domains.Dns.GetHosts((DnsGetHostsRequest)request),
                 _ => null
             };
         }

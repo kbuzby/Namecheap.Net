@@ -107,7 +107,15 @@
                 </TreeViewItem>
             </TreeView>
         </Grid>
-        <StackPanel Grid.Column="1" Orientation="Vertical">
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+        <ScrollViewer Grid.Row="0">
+                <StackPanel>
             <Label>Request</Label>
             <ListView x:Name="lvRequest" ItemsSource="{Binding RequestProperties}">
                 <ListView.ItemContainerStyle>
@@ -124,12 +132,19 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Click="Button_Click">Send</Button>
-
+                    
+                </StackPanel>
+        </ScrollViewer>
+            <Button Grid.Row="1" Click="Button_Click">Send</Button>
+            <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto">
+                <StackPanel>
             <Label>Response</Label>
-            <ScrollViewer>
                 <TextBlock Text="{Binding ApiResponse}"/>
+                    
+                </StackPanel>
+                
             </ScrollViewer>
-        </StackPanel>
+
+        </Grid>
     </Grid>
 </Window>
