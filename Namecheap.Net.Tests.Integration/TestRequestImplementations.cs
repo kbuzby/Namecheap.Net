@@ -12,6 +12,11 @@ namespace Namecheap.Net.Tests.Integration
             public string SortBy { get; set; }
         }
 
+        class GetContactsRequest : Commands.Domains.IGetContactsRequest
+        {
+            public string DomainName { get; set; }
+        }
+
         namespace Dns
         {
             class GetHostsRequest : Commands.Domains.Dns.IGetHostsRequest

@@ -11,13 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
 
 namespace Namecheap.Net.Tests.Integration
@@ -51,17 +44,19 @@ namespace Namecheap.Net.Tests.Integration
         }
 
         private string? _apiResponse;
-        public string? ApiResponse {
+        public string? ApiResponse
+        {
             get => _apiResponse;
             set
             {
                 _apiResponse = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private ObservableCollection<PropertyDisplayInfo>? _requestProperties;
-        public ObservableCollection<PropertyDisplayInfo>? RequestProperties { 
+        public ObservableCollection<PropertyDisplayInfo>? RequestProperties
+        {
             get => _requestProperties;
             set
             {
@@ -151,7 +146,11 @@ namespace Namecheap.Net.Tests.Integration
         {
             return itemPath switch
             {
+                // Domains
                 "Domains.GetList" => typeof(Test.Domains.GetListRequest),
+                "Domains.GetContacts" => typeof(Test.Domains.GetContactsRequest),
+
+                // Domains.Dns
                 "Domains.DNS.GetHosts" => typeof(Test.Domains.Dns.GetHostsRequest),
                 _ => null
             };
@@ -160,7 +159,11 @@ namespace Namecheap.Net.Tests.Integration
         {
             return request switch
             {
+                // Domains
                 Test.Domains.GetListRequest => typeof(ApiResponse<Commands.Domains.GetListResponse>),
+                Test.Domains.GetContactsRequest => typeof(ApiResponse<Commands.Domains.GetContactsResponse>),
+
+                // Domains.Dns
                 Test.Domains.Dns.GetHostsRequest => typeof(ApiResponse<Commands.Domains.Dns.GetHostsResponse>),
                 _ => null
             };
@@ -169,7 +172,11 @@ namespace Namecheap.Net.Tests.Integration
         {
             return request switch
             {
+                // Domains
                 Test.Domains.GetListRequest => await api.Domains.GetList((Test.Domains.GetListRequest)request),
+                Test.Domains.GetContactsRequest => await api.Domains.GetContacts((Test.Domains.GetContactsRequest)request),
+
+                // Domains.Dns
                 Test.Domains.Dns.GetHostsRequest => await api.Domains.Dns.GetHosts((Test.Domains.Dns.GetHostsRequest)request),
                 _ => null
             };
@@ -179,7 +186,7 @@ namespace Namecheap.Net.Tests.Integration
     public record PropertyDisplayInfo
     {
         public PropertyInfo PropertyInfo { get; init; }
-        public string PropertyName => PropertyInfo.Name; 
+        public string PropertyName => PropertyInfo.Name;
         public string? PropertyValue { get; init; }
         public PropertyDisplayInfo(PropertyInfo propertyInfo)
         {
