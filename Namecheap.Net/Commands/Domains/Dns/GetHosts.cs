@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Namecheap.Net.Commands.Domains.Dns
@@ -18,7 +14,7 @@ namespace Namecheap.Net.Commands.Domains.Dns
 
         public async Task<ApiResponse<GetHostsResponse>?> GetHosts(IGetHostsRequest hostsRequest)
         {
-            return await ExecuteCommand<IGetHostsRequest,GetHostsResponse>(hostsRequest);
+            return await ExecuteCommand<IGetHostsRequest, GetHostsResponse>(hostsRequest);
         }
 
     }

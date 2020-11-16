@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Namecheap.Net.Tests
 {
@@ -14,7 +10,7 @@ namespace Namecheap.Net.Tests
     {
         private const string ApiKey = "ThisIsATestApiKey";
         private const string UserName = "TestUser";
-        private IPAddress ClientIp = new(new byte[] { 127, 0, 0, 1 });
+        private readonly IPAddress ClientIp = new(new byte[] { 127, 0, 0, 1 });
         private const string ApiUserName = "ApiCustomUser";
 
         private const string StandardEndPoint = "https://api.namecheap.com/xml.response";

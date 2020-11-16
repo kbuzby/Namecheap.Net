@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using Namecheap.Net.Commands.Domains;
+﻿using Namecheap.Net.Commands.Domains;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 
 namespace Namecheap.Net
 {
@@ -15,7 +11,7 @@ namespace Namecheap.Net
         internal HttpClient HttpClient { get; } = new HttpClient();
 
         private readonly bool _useSandbox;
-        public string ApiEndPoint => $"https://api.{(_useSandbox ? "sandbox." : "")}namecheap.com/xml.response"; 
+        public string ApiEndPoint => $"https://api.{(_useSandbox ? "sandbox." : "")}namecheap.com/xml.response";
         public string ApiKey { get; }
         public string UserName { get; }
         public string ApiUserName { get; }

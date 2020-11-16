@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -16,7 +12,7 @@ namespace Namecheap.Net.Commands
         {
             Api = api;
         }
-        internal async Task<ApiResponse<TResponse>?> ExecuteCommand<TCommand,TResponse>(TCommand command) where TResponse : CommandResponse
+        internal async Task<ApiResponse<TResponse>?> ExecuteCommand<TCommand, TResponse>(TCommand command) where TResponse : CommandResponse
         {
             Uri requestUri = ApiRequestBuilder.BuildRequest(Api, command);
 
@@ -34,7 +30,7 @@ namespace Namecheap.Net.Commands
         }
     }
 
-    [XmlRoot(ElementName = "ApiResponse",Namespace = "http://api.namecheap.com/xml.response")]
+    [XmlRoot(ElementName = "ApiResponse", Namespace = "http://api.namecheap.com/xml.response")]
     public class ApiResponse<TContent> where TContent : CommandResponse
     {
         [XmlAttribute]

@@ -112,7 +112,7 @@ namespace Namecheap.Net.Tests
         private interface ITestCommandBasic
         {
             [QueryParam(Optional = true)]
-            public string Prop { get; } 
+            public string Prop { get; }
             [QueryParam(Optional = true)]
             public string Prop1 { get; }
         }
@@ -122,7 +122,8 @@ namespace Namecheap.Net.Tests
             public string Prop1 { get; init; }
         }
 
-        private static void AssertCommonQueryParams(Dictionary<string, StringValues> queryCollection) {
+        private static void AssertCommonQueryParams(Dictionary<string, StringValues> queryCollection)
+        {
             AssertQueryParam(queryCollection, "ApiKey", "testApiKey");
             AssertQueryParam(queryCollection, "UserName", "userName");
             AssertQueryParam(queryCollection, "ApiUser", "apiUserName");
