@@ -18,13 +18,10 @@ namespace Namecheap.Net.Commands.Domains.Dns
         }
 
     }
+
     [NamecheapApiCommand(DnsCommandGroup.GetHostsCommand)]
-    public interface IGetHostsRequest
+    public interface IGetHostsRequest : IHostsRequest
     {
-        [QueryParam("SLD")]
-        public string Sld { get; }
-        [QueryParam("TLD")]
-        public string Tld { get; }
     }
 
     public record GetHostsRequest : IGetHostsRequest
@@ -57,30 +54,6 @@ namespace Namecheap.Net.Commands.Domains.Dns
 
         [XmlElement(ElementName = "host")]
         public Host[]? Host { get; set; }
-    }
-
-    public class Host
-    {
-        [XmlAttribute]
-        public string? HostId { get; set; }
-        [XmlAttribute]
-        public string? Name { get; set; }
-        [XmlAttribute]
-        public string? Type { get; set; }
-        [XmlAttribute]
-        public string? Address { get; set; }
-        [XmlAttribute]
-        public string? MXPref { get; set; }
-        [XmlAttribute]
-        public int TTL { get; set; }
-        [XmlAttribute]
-        public string? AssociatedAppTitle { get; set; }
-        [XmlAttribute]
-        public string? FriendlyName { get; set; }
-        [XmlAttribute]
-        public bool IsActive { get; set; }
-        [XmlAttribute]
-        public bool IsDDNSEnabled { get; set; }
     }
 
 }
