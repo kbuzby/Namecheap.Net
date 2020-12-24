@@ -107,6 +107,33 @@ namespace Namecheap.Net.Tests
             });
         }
 
+        /// Test an enumerable property 
+        [Test]
+        public void TestCommandWithEnumerableProp()
+        {
+            SubObject[] objects =
+            {
+                new SubObject() { Prop = "value1" },
+                new SubObject() { Prop = "value2" },
+                new SubObject() { Prop = "value3" }
+            };
+
+            TestCommandEnumerable command = new()
+            {
+                Props = objects
+            };
+
+            Uri requestUri = ApiRequestBuilder.BuildRequest(api, command);
+
+            var queryCollection = QueryHelpers.ParseQuery(requestUri.Query);
+            Assert.True(queryCollection.ContainsKey("Prop1"));
+            Assert.AreEqual(queryCollection["Prop1"], "value1");
+            Assert.True(queryCollection.ContainsKey("Prop2"));
+            Assert.AreEqual(queryCollection["Prop2"], "value2");
+            Assert.True(queryCollection.ContainsKey("Prop3"));
+            Assert.AreEqual(queryCollection["Prop3"], "value3");
+        }
+
         #region Helpers 
         [NamecheapApiCommand("Test.Command")]
         private interface ITestCommandBasic
@@ -120,6 +147,24 @@ namespace Namecheap.Net.Tests
         {
             public string Prop { get; init; }
             public string Prop1 { get; init; }
+        }
+
+        private class SubObject
+        {
+            [QueryParam]
+            public string Prop { get; init; }
+        }
+
+        [NamecheapApiCommand("Test.Command.Enumerable")]
+        private interface ITestCommandEnumerable
+        {
+            [QueryParam]
+            public SubObject[] Props { get; }
+        }
+
+        private class TestCommandEnumerable : ITestCommandEnumerable
+        {
+            public SubObject[] Props { get; init; }
         }
 
         private static void AssertCommonQueryParams(Dictionary<string, StringValues> queryCollection)

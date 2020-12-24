@@ -45,16 +45,33 @@ namespace Namecheap.Net
                         .Where(prop => Attribute.IsDefined(prop, typeof(QueryParamAttribute)));
                     foreach (var prop in commandQueryParamProps)
                     {
-                        QueryParamAttribute? queryAttr = (prop?.GetCustomAttributes(typeof(QueryParamAttribute), true).First() as QueryParamAttribute);
-                        if (queryAttr == null) { continue; }
+                        // If we have an enumerable object then we want to add its properties with a incrementing number suffix for each instance
+                        var subIface = prop.PropertyType.GetInterfaces().FirstOrDefault(iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                        if (subIface is not null)
+                        {
+                            // FUTURE - support enumerable of value types?
 
-                        string queryKey = queryAttr.Key;
-                        object? queryValue = prop?.GetValue(command);
+                            if (prop.GetValue(command) is IEnumerable<object> enumerableObject)
+                            {
+                                var enumerableType = subIface.GetGenericArguments()[0];
+                                IEnumerable<PropertyInfo> objectQueryProps = enumerableType.GetProperties()
+                                    .Concat(enumerableType.GetInterfaces().SelectMany(iface => iface.GetProperties()))
+                                    .Where(prop => Attribute.IsDefined(prop, typeof(QueryParamAttribute)));
 
-                        // if object is empty / null and it was listed as optional then don't include it in the queryParams
-                        if ((queryValue == null || (queryValue is string queryValueStr && string.IsNullOrEmpty(queryValueStr)))
-                            && queryAttr.Optional) { continue; }
-                        queryParams.Add(queryKey, queryValue?.ToString() ?? "");
+                                var i = 1;
+                                foreach (var obj in enumerableObject)
+                                {
+                                    foreach (var subProp in objectQueryProps)
+                                    {
+                                        TryAddQueryParam(queryParams, subProp, obj, i++);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            TryAddQueryParam(queryParams, prop, command);
+                        }
                     }
 
                     return queryParams;
@@ -62,6 +79,21 @@ namespace Namecheap.Net
             }
 
             throw new ArgumentException($"{nameof(command)} must be an object with NamecheapApiCommandAttribute");
+        }
+
+        private static void TryAddQueryParam<T>(Dictionary<string, string> queryParams, PropertyInfo prop, T queryObject, int? increment = null)
+        {
+            QueryParamAttribute? queryAttr = (prop?.GetCustomAttributes(typeof(QueryParamAttribute), true).First() as QueryParamAttribute);
+            if (queryAttr == null) { return; }
+
+            string queryKey = queryAttr.Key + increment?.ToString() ?? ""; // append increment if necessary
+            object? queryValue = prop?.GetValue(queryObject);
+
+            // if object is empty / null and it was listed as optional then don't include it in the queryParams
+            if ((queryValue == null || (queryValue is string queryValueStr && string.IsNullOrEmpty(queryValueStr)))
+                && queryAttr.Optional) { return; }
+
+            queryParams.Add(queryKey, queryValue?.ToString() ?? "");
         }
 
         internal static (Type iface, NamecheapApiCommandAttribute commandAttr)? FindApiCommandInterface(Type requestType)
