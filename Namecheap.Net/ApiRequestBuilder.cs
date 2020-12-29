@@ -41,12 +41,20 @@ namespace Namecheap.Net
                     };
 
                     // get the params from the command itself
-                    IEnumerable<PropertyInfo> commandQueryParamProps = iface.GetProperties()
+                    IEnumerable<PropertyInfo> commandQueryParamProps = command.GetType().GetInterfaces()
+                        .SelectMany(iface => iface.GetProperties())
                         .Where(prop => Attribute.IsDefined(prop, typeof(QueryParamAttribute)));
                     foreach (var prop in commandQueryParamProps)
                     {
-                        // If we have an enumerable object then we want to add its properties with a incrementing number suffix for each instance
-                        var subIface = prop.PropertyType.GetInterfaces().FirstOrDefault(iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                        Type? subIface = null;
+                        if (prop.PropertyType != typeof(string)) // make sure to exclude strings because they are enumerables of chars
+                        {
+                            // If we have an enumerable object then we want to add its properties with a incrementing number suffix for each instance
+                            subIface = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+                            ? prop.PropertyType
+                            : prop.PropertyType.GetInterfaces().FirstOrDefault(iface => iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                        }
+
                         if (subIface is not null)
                         {
                             // FUTURE - support enumerable of value types?
@@ -63,8 +71,9 @@ namespace Namecheap.Net
                                 {
                                     foreach (var subProp in objectQueryProps)
                                     {
-                                        TryAddQueryParam(queryParams, subProp, obj, i++);
+                                        TryAddQueryParam(queryParams, subProp, obj, i);
                                     }
+                                    i++;
                                 }
                             }
                         }
