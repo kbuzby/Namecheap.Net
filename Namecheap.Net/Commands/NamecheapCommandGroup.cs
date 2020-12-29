@@ -24,6 +24,8 @@ namespace Namecheap.Net.Commands
             using StreamReader sr = new(responseStream);
 
             string responseString = sr.ReadToEnd();
+            
+            Debugger.Break();
             */
 
             return xmlSerializer.Deserialize(responseStream) as ApiResponse<TResponse>;
