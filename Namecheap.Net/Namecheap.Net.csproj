@@ -4,7 +4,7 @@
 	  <TargetFramework>net5.0</TargetFramework>
 	  <Nullable>enable</Nullable>
 	  <PackageId>Namecheap.Net</PackageId>
-	  <Version>0.0.1-alpha</Version>
+	  <Version>0.0.2-alpha</Version>
 	  <Authors>Kyle Buzby</Authors>
 	  <Description>
 		  Wrapper library around the Namecheap web API
