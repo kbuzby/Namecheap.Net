@@ -17,13 +17,13 @@ namespace Namecheap.Net.Commands.Domains.Dns
         [QueryParam("HostName")]
         public string? Name { get; set; }
         [XmlAttribute]
-        [QueryParam("RecordName")]
+        [QueryParam("RecordType")]
         public string? Type { get; set; }
         [XmlAttribute]
         [QueryParam]
         public string? Address { get; set; }
         [XmlAttribute]
-        [QueryParam]
+        [QueryParam(Optional = true)]
         public string? MXPref { get; set; }
         [XmlAttribute]
         [QueryParam]
