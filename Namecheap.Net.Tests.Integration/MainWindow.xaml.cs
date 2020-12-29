@@ -152,6 +152,7 @@ namespace Namecheap.Net.Tests.Integration
 
                 // Domains.Dns
                 "Domains.DNS.GetHosts" => typeof(Test.Domains.Dns.GetHostsRequest),
+                "Domains.DNS.SetHosts" => typeof(Test.Domains.Dns.SetHostsRequest),
                 _ => null
             };
         }
@@ -165,6 +166,7 @@ namespace Namecheap.Net.Tests.Integration
 
                 // Domains.Dns
                 Test.Domains.Dns.GetHostsRequest => typeof(ApiResponse<Commands.Domains.Dns.GetHostsResponse>),
+                Test.Domains.Dns.SetHostsRequest => typeof(ApiResponse<Commands.Domains.Dns.SetHostsResponse>),
                 _ => null
             };
         }
@@ -178,6 +180,7 @@ namespace Namecheap.Net.Tests.Integration
 
                 // Domains.Dns
                 Test.Domains.Dns.GetHostsRequest => await api.Domains.Dns.GetHosts((Test.Domains.Dns.GetHostsRequest)request),
+                Test.Domains.Dns.SetHostsRequest => await api.Domains.Dns.SetHosts((Test.Domains.Dns.SetHostsRequest)request),
                 _ => null
             };
         }
